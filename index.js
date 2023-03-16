@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const userRoutes = require('./app/User/UserRoute');
+const webRoutes = require('./app/Website/WebsiteRoutes');
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(userRoutes);
+app.use(webRoutes);
 
 app.listen(5000, () => {
     console.log("Backend is at port 5000");
