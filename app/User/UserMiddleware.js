@@ -21,6 +21,7 @@ const authenticateUserMiddleware = async (req, res, next) => {
     });
     return;
   }
+  
   const expiry = new Date(user.tokens.accessToken.expireAt);
   if (expiry < new Date()) {
     res.status(422).json({
