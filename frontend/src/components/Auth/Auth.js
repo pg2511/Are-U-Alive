@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Auth.css";
 
 function Auth() {
@@ -60,9 +60,72 @@ function Auth() {
     }
     const data = await res.json();
 
-    console.log(data);
+    if (!data.status) {
+      setErrorMsg(data.message);
+      return;
+    }
+
+    const tokens = data.data.tokens;
+
+    localStorage.setItem("tokens", JSON.stringify(tokens));
+
+    window.location.reload();
   };
 
+
+  // Login validation
+  const handleLogin = async () => {
+    if (submitButtonDisabled) return;
+    if (!values.email.trim() || !values.pass) {
+      setErrorMsg("All fields are required");
+      return;
+    }
+    if (!validateEmail(values.email)) {
+      setErrorMsg("Email is not valid");
+      return;
+    }
+    if (values.pass.length < 6) {
+      setErrorMsg("Password must be of 6 characters");
+      return;
+    }
+    setErrorMsg("");
+
+    setSubmitButtonDisabled(true);
+    const res = await fetch("http://localhost:5000/user/login", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        email: values.email,
+        password: values.pass,
+      }),
+    }).catch((err) => {
+      setErrorMsg("Error in login - ", err.message);
+    });
+    setSubmitButtonDisabled(false);
+
+    if (!res) {
+      setErrorMsg("Error in login");
+      return;
+    }
+    const data = await res.json();
+
+    if (!data.status) {
+      setErrorMsg(data.message);
+      return;
+    }
+    
+    const tokens = data.data.tokens;
+
+    localStorage.setItem("tokens", JSON.stringify(tokens));
+
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    setValues({});
+  }, [signupActive]);
 
   const signupDiv = (
     <div className="box signup">
@@ -139,7 +202,10 @@ function Auth() {
           }
         />
       </div>
-      <button>Login</button>
+
+      <button onClick={handleLogin} disabled={submitButtonDisabled}>
+        {submitButtonDisabled ? "Logging in..." : "Login"}
+      </button>
 
       <p className="bottom-text">
         New user ? <span  onClick={() => setSignupActive(true)}>Sign up here</span>
