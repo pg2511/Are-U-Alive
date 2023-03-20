@@ -5,6 +5,9 @@ import Auth from "./components/Auth/Auth";
 function App() {
   const [pageLoaded, setPageLoaded] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
+  const [websites, setWebsites] = useState([]);
+  const [loadingWebsites, setLoadingWebsites] = useState(true);
+  const [inputUrl, setInputUrl] = useState("");
 
   const init = async () => {
     const rawTokens = localStorage.getItem("tokens");
@@ -52,6 +55,28 @@ function App() {
       setPageLoaded(true);
       setShowAuth(false);
     }
+
+    fetchAllWebsites();
+  };
+
+  const fetchAllWebsites = async () => {
+    const rawToken = localStorage.getItem("tokens");
+    const tokens = JSON.parse(rawToken);
+    const accessToken = tokens.accessToken.token;
+
+    const res = await fetch("http://localhost:5000/website", {
+      headers: {
+        Authorization: accessToken,
+      },
+    }).catch((err) => void err);
+    setLoadingWebsites(false);
+    if (!res) {
+      return;
+    }
+
+    const data = await res.json();
+    console.log(data);
+    // setWebsites(data.data);
   };
 
   useEffect(() => {
