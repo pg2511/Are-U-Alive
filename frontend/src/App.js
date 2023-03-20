@@ -64,7 +64,37 @@ function App() {
         showAuth ? (
           <Auth />
         ) : (
-          <div className="inner-app"></div>
+          <div className="inner-app">
+            <div className={"app-header"}>
+                <p className="heading">Add a website for monitoring</p>
+              <div className="elem">
+                <label>Enter Website URL</label>
+                <input className="input" placeholder="https://google.com" />
+              </div>
+
+              <button>Add</button>
+            </div>
+
+            <div className="body">
+              <p className="heading">Your Websites</p>
+
+              <div className={"cards"}>
+                {[1, 1, 1, 1, 1, 1].map((item, index) => (
+                  <div className={"card"}>
+                    <div className="left">
+                      <p className="link green">Active</p>
+                      <p className="url">https://amazon.com</p>
+                    </div>
+
+                    <div className="right">
+                      <p className="link red">Delete</p>
+                    </div>
+                  </div>
+                ))}
+
+              </div>
+            </div>
+          </div>
         )
       ) : (
         <div className="loading">
