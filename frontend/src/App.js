@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Auth from "./components/Auth/Auth";
+import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
   const [pageLoaded, setPageLoaded] = useState(false);
@@ -8,6 +9,8 @@ function App() {
   const [websites, setWebsites] = useState([]);
   const [loadingWebsites, setLoadingWebsites] = useState(true);
   const [inputUrl, setInputUrl] = useState("");
+  const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const init = async () => {
     const rawTokens = localStorage.getItem("tokens");
@@ -75,8 +78,47 @@ function App() {
     }
 
     const data = await res.json();
-    console.log(data);
-    // setWebsites(data.data);
+    // console.log(data);
+
+    setWebsites(data.data);
+  };
+
+  const addWebsite = async () => {
+    if (!inputUrl.trim() || submitButtonDisabled) return;
+    setErrorMsg("");
+
+    const rawToken = localStorage.getItem("tokens");
+    const tokens = JSON.parse(rawToken);
+    const accessToken = tokens.accessToken.token;
+
+    setSubmitButtonDisabled(true);
+    const res = await fetch("http://localhost:5000/website", {
+      method: "POST",
+      headers: {
+        Authorization: accessToken,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        url: inputUrl,
+      }),
+    }).catch((err) => void err);
+    setSubmitButtonDisabled(false);
+
+    if (!res) {
+      setErrorMsg("Error creating website");
+      return;
+    }
+    const data = await res.json();
+
+    if (!data.status) {
+      setErrorMsg(data.message);
+      return;
+    }
+
+    // console.log(data);
+    setInputUrl("");
+    toast.success('Website added successfully!')
+    fetchAllWebsites();
   };
 
   useEffect(() => {
@@ -85,39 +127,62 @@ function App() {
 
   return (
     <div className="app">
+      <Toaster position="top-center"/>
       {pageLoaded ? (
         showAuth ? (
           <Auth />
         ) : (
           <div className="inner-app">
             <div className={"app-header"}>
-                <p className="heading">Add a website for monitoring</p>
+              <p className="heading">Add a website for monitoring</p>
               <div className="elem">
                 <label>Enter Website URL</label>
-                <input className="input" placeholder="https://google.com" />
+                <input
+                  className="input"
+                  placeholder="https://google.com"
+                  value={inputUrl}
+                  onChange={(event) => setInputUrl(event.target.value)}
+                />
               </div>
 
-              <button>Add</button>
+              {errorMsg && <p className="error">{errorMsg}</p>}
+
+              <button onClick={addWebsite} disabled={submitButtonDisabled}>
+                {submitButtonDisabled ? "Adding..." : "Add"}
+              </button>
             </div>
 
             <div className="body">
               <p className="heading">Your Websites</p>
 
-              <div className={"cards"}>
-                {[1, 1, 1, 1, 1, 1].map((item, index) => (
-                  <div className={"card"}>
-                    <div className="left">
-                      <p className="link green">Active</p>
-                      <p className="url">https://amazon.com</p>
-                    </div>
+              {loadingWebsites ? (
+                <p>LOADING...</p>
+              ) : (
+                <div className={"cards"}>
+                  {websites.length ? (
+                    websites.map((item) => (
+                      <div className={"card"} key={item._id}>
+                        <div className="left">
+                          <p
+                            className={`link ${
+                              item.isActive ? "green" : "red"
+                            }`}
+                          >
+                            {item.isActive ? "ACTIVE" : "DOWN"}
+                          </p>
+                          <p className="url">{item.url}</p>
+                        </div>
 
-                    <div className="right">
-                      <p className="link red">Delete</p>
-                    </div>
-                  </div>
-                ))}
-
-              </div>
+                        <div className="right">
+                          <p className="link red">Delete</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No Websites added !</p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )
