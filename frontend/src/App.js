@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import Auth from "./components/Auth/Auth";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   const [pageLoaded, setPageLoaded] = useState(false);
@@ -11,6 +11,7 @@ function App() {
   const [inputUrl, setInputUrl] = useState("");
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [deletingWebsite, setDeletingWebsite] = useState("");
 
   const init = async () => {
     const rawTokens = localStorage.getItem("tokens");
@@ -117,7 +118,29 @@ function App() {
 
     // console.log(data);
     setInputUrl("");
-    toast.success('Website added successfully!')
+    toast.success("Website added successfully!");
+    fetchAllWebsites();
+  };
+
+  const deleteWebsite = async (id) => {
+    if (deletingWebsite) return;
+
+    const rawToken = localStorage.getItem("tokens");
+    const tokens = JSON.parse(rawToken);
+    const accessToken = tokens.accessToken.token;
+
+    setDeletingWebsite(id);
+    const res = await fetch(`http://localhost:5000/website/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: accessToken,
+      },
+    }).catch((err) => void err);
+    setDeletingWebsite("");
+
+    if (!res) return;
+
+    toast.error("Website deleted successfully!");
     fetchAllWebsites();
   };
 
@@ -127,7 +150,23 @@ function App() {
 
   return (
     <div className="app">
-      <Toaster position="top-center"/>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          success: {
+            style: {
+              color: '#FFFFFF',
+              background: "black",
+            },
+          },
+          error: {
+            style: {
+              color: '#FFFFFF',
+              background: "black",
+            },
+          },
+        }}
+      />
       {pageLoaded ? (
         showAuth ? (
           <Auth />
@@ -174,7 +213,14 @@ function App() {
                         </div>
 
                         <div className="right">
-                          <p className="link red">Delete</p>
+                          <p
+                            className="link red"
+                            onClick={() => deleteWebsite(item._id)}
+                          >
+                            {deletingWebsite === item._id
+                              ? "Deleting..."
+                              : "Delete"}
+                          </p>
                         </div>
                       </div>
                     ))
