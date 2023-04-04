@@ -30,3 +30,4 @@ export const circle = <i className="fa-solid fa-circle-dot"></i>
 export const globe = <i className="fa-solid fa-globe"></i>
 export const add = <i className="fa-solid fa-square-plus"></i>
 export const deleteweb = <i className="fa-solid fa-trash"></i>
+export const help = <i className="fa-solid fa-circle-info"></i>
