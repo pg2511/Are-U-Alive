@@ -3,9 +3,11 @@ import styled from "styled-components";
 import bg from './img/bg.png'
 import {MainLayout} from './styles/Layouts'
 import Orb from './components/Orb/Orb'
+import Navigation from './components/Navigation/Navigation'
 
 function App() {
-  
+  const [active, setActive] = useState(1)
+
   const orbMemo = useMemo(() => {
     return <Orb />
   },[])
@@ -14,7 +16,7 @@ function App() {
     <AppStyled bg={bg} className="app">
       {orbMemo}
       <MainLayout>
-       
+        <Navigation active={active} setActive={setActive} />
       </MainLayout>
     </AppStyled>
   );
