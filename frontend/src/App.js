@@ -4,9 +4,28 @@ import bg from './img/bg.png'
 import {MainLayout} from './styles/Layouts'
 import Orb from './components/Orb/Orb'
 import Navigation from './components/Navigation/Navigation'
+import Dashboard from './components/Dashboard/Dashboard';
+import Add from './components/Add/Add'
+import Delete from './components/Delete/Delete';
+import Help from './components/Help/Help';
 
 function App() {
   const [active, setActive] = useState(1)
+
+  const displayData = () => {
+    switch(active){
+      case 1:
+        return <Dashboard />
+      case 2:
+        return <Add />
+      case 3: 
+        return <Delete />
+      case 4: 
+        return <Help />
+      default: 
+        return <Dashboard />
+    }
+  }
 
   const orbMemo = useMemo(() => {
     return <Orb />
@@ -17,6 +36,9 @@ function App() {
       {orbMemo}
       <MainLayout>
         <Navigation active={active} setActive={setActive} />
+        <main>
+          {displayData()}
+        </main>
       </MainLayout>
     </AppStyled>
   );
