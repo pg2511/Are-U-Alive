@@ -2,107 +2,109 @@ import React, { useContext, useState } from "react"
 import axios from 'axios'
 
 
-const BASE_URL = "http://localhost:5000/api/v1/";
+const BASE_URL = "http://localhost:5000/";
 
 
 const GlobalContext = React.createContext()
 
 export const GlobalProvider = ({children}) => {
 
-    const [incomes, setIncomes] = useState([])
-    const [expenses, setExpenses] = useState([])
-    const [error, setError] = useState(null)
+    const [websites, setWebsites] = useState([]);
+    const [loadingWebsites, setLoadingWebsites] = useState(true);
+    const [inputUrl, setInputUrl] = useState("");
+    const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+    const [deletingWebsite, setDeletingWebsite] = useState("");
 
-    //calculate incomes
-    const addIncome = async (income) => {
-        const response = await axios.post(`${BASE_URL}add-income`, income)
-            .catch((err) =>{
-                setError(err.response.data.message)
-            })
-        getIncomes()
-    }
+    const addWebsite = async () => {
+        const rawToken = localStorage.getItem("tokens");
+        const tokens = JSON.parse(rawToken);
+        const accessToken = tokens.accessToken.token;
+    
+        setSubmitButtonDisabled(true);
+        const res = await fetch("http://localhost:5000/website", {
+          method: "POST",
+          headers: {
+            Authorization: accessToken,
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            url: inputUrl,
+          }),
+        }).catch((err) => void err);
+        setSubmitButtonDisabled(false);
+    
+        if (!res) {
+          setErrorMsg("Error creating website");
+          return;
+        }
+        const data = await res.json();
+    
+        if (!data.status) {
+          setErrorMsg(data.message);
+          return;
+        }
+    
+        // console.log(data);
+        setInputUrl("");
+        fetchAllWebsites();
+    };
 
-    const getIncomes = async () => {
-        const response = await axios.get(`${BASE_URL}get-incomes`)
-        setIncomes(response.data)
-        console.log(response.data)
-    }
+    // fetch all websites 
+    const fetchAllWebsites = async () => {
+        const rawToken = localStorage.getItem("tokens");
+        const tokens = JSON.parse(rawToken);
+        const accessToken = tokens.accessToken.token;
+    
+        const res = await fetch("http://localhost:5000/website", {
+          headers: {
+            Authorization: accessToken,
+          },
+        }).catch((err) => void err);
+        setLoadingWebsites(false);
+        if (!res) {
+          return;
+        }
+    
+        const data = await res.json();
+        // console.log(data);
+    
+        setWebsites(data.data);
+    };
 
-    const deleteIncome = async (id) => {
-        const res  = await axios.delete(`${BASE_URL}delete-income/${id}`)
-        getIncomes()
-    }
+    const deleteWebsite = async (id) => {
+        if (deletingWebsite) return;
+    
+        const rawToken = localStorage.getItem("tokens");
+        const tokens = JSON.parse(rawToken);
+        const accessToken = tokens.accessToken.token;
+    
+        setDeletingWebsite(id);
+        const res = await fetch(`http://localhost:5000/website/${id}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: accessToken,
+          },
+        }).catch((err) => void err);
+        setDeletingWebsite("");
+    
+        if (!res) return;
+        fetchAllWebsites();
+    };
+    
 
-    const totalIncome = () => {
-        let totalIncome = 0;
-        incomes.forEach((income) =>{
-            totalIncome = totalIncome + income.amount
-        })
-
-        return totalIncome;
-    }
-
-
-    //calculate incomes
-    const addExpense = async (income) => {
-        const response = await axios.post(`${BASE_URL}add-expense`, income)
-            .catch((err) =>{
-                setError(err.response.data.message)
-            })
-        getExpenses()
-    }
-
-    const getExpenses = async () => {
-        const response = await axios.get(`${BASE_URL}get-expenses`)
-        setExpenses(response.data)
-        console.log(response.data)
-    }
-
-    const deleteExpense = async (id) => {
-        const res  = await axios.delete(`${BASE_URL}delete-expense/${id}`)
-        getExpenses()
-    }
-
-    const totalExpenses = () => {
-        let totalIncome = 0;
-        expenses.forEach((income) =>{
-            totalIncome = totalIncome + income.amount
-        })
-
-        return totalIncome;
-    }
-
-
-    const totalBalance = () => {
-        return totalIncome() - totalExpenses()
-    }
-
-    const transactionHistory = () => {
-        const history = [...incomes, ...expenses]
-        history.sort((a, b) => {
-            return new Date(b.createdAt) - new Date(a.createdAt)
-        })
-
-        return history.slice(0, 3)
+    const totalWebsite = () => {
+        return websites.length;
     }
 
 
     return (
         <GlobalContext.Provider value={{
-            addIncome,
-            getIncomes,
-            incomes,
-            deleteIncome,
-            expenses,
-            totalIncome,
-            addExpense,
-            getExpenses,
-            deleteExpense,
-            totalExpenses,
-            totalBalance,
-            transactionHistory,
-            error,
-            setError
+            addWebsite,
+            deleteWebsite,
+            fetchAllWebsites,
+            totalWebsite,
+            websites,
         }}>
             {children}
         </GlobalContext.Provider>
