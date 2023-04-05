@@ -1,6 +1,4 @@
 import React, { useContext, useState } from "react"
-import axios from 'axios'
-
 
 const BASE_URL = "http://localhost:5000/";
 
@@ -16,13 +14,18 @@ export const GlobalProvider = ({children}) => {
     const [errorMsg, setErrorMsg] = useState("");
     const [deletingWebsite, setDeletingWebsite] = useState("");
 
-    const addWebsite = async () => {
+    const addWebsite = async (inputUrl) => {
+
+        if (!inputUrl.trim() || submitButtonDisabled) return;
+        
+        setErrorMsg("");
+
         const rawToken = localStorage.getItem("tokens");
         const tokens = JSON.parse(rawToken);
         const accessToken = tokens.accessToken.token;
     
         setSubmitButtonDisabled(true);
-        const res = await fetch("http://localhost:5000/website", {
+        const res = await fetch(`${BASE_URL}website`, {
           method: "POST",
           headers: {
             Authorization: accessToken,
@@ -105,6 +108,8 @@ export const GlobalProvider = ({children}) => {
             fetchAllWebsites,
             totalWebsite,
             websites,
+            errorMsg, 
+            setErrorMsg
         }}>
             {children}
         </GlobalContext.Provider>

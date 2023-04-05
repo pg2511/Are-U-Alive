@@ -1,45 +1,78 @@
-import React, {useState, useMemo} from 'react'
+import React, {useState, useEffect} from 'react'
 import styled from "styled-components";
+import Home from './components/Home/Home';
+import Auth from './components/Auth/Auth'
 import bg from './img/bg.png'
-import {MainLayout} from './styles/Layouts'
-import Orb from './components/Orb/Orb'
-import Navigation from './components/Navigation/Navigation'
-import Dashboard from './components/Dashboard/Dashboard';
-import Add from './components/Add/Add'
-import Delete from './components/Delete/Delete';
-import Help from './components/Help/Help';
 
 function App() {
-  const [active, setActive] = useState(1)
 
-  const displayData = () => {
-    switch(active){
-      case 1:
-        return <Dashboard />
-      case 2:
-        return <Add />
-      case 3: 
-        return <Delete />
-      case 4: 
-        return <Help />
-      default: 
-        return <Dashboard />
+  const [pageLoaded, setPageLoaded] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+
+  const init = async () => {
+    const rawTokens = localStorage.getItem("tokens");
+    if (!rawTokens) {
+      setShowAuth(true);
+      setPageLoaded(true);
+      return;
     }
-  }
+    const tokens = JSON.parse(rawTokens);
 
-  const orbMemo = useMemo(() => {
-    return <Orb />
-  },[])
+    const accessToken = tokens.accessToken;
+    const aExpiry = new Date(accessToken.expireAt);
+    if (new Date() > aExpiry) {
+      const res = await fetch("http://localhost:5000/user/new-token", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          refreshToken: tokens?.refreshToken?.token,
+        }),
+      }).catch((err) => void err);
+
+      if (!res) {
+        setPageLoaded(true);
+        setShowAuth(true);
+        localStorage.removeItem("tokens");
+        return;
+      }
+
+      const data = await res.json();
+      if (!data || !data.status) {
+        setPageLoaded(true);
+        setShowAuth(true);
+        localStorage.removeItem("tokens");
+        return;
+      }
+
+      const newTokens = data.data?.tokens;
+      localStorage.setItem("tokens", JSON.stringify(newTokens));
+
+      setPageLoaded(true);
+      setShowAuth(false);
+    } else {
+      setPageLoaded(true);
+      setShowAuth(false);
+    }
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
 
   return (
     <AppStyled bg={bg} className="app">
-      {orbMemo}
-      <MainLayout>
-        <Navigation active={active} setActive={setActive} />
-        <main>
-          {displayData()}
-        </main>
-      </MainLayout>
+      {pageLoaded ? (
+        showAuth ? (
+          <Auth />
+        ) : (
+          <Home/>
+        )): (
+        <div className="loading">
+          <p>LOADING...</p>
+        </div>
+      )}
     </AppStyled>
   );
 }
