@@ -64,6 +64,7 @@ export const GlobalProvider = ({children}) => {
             Authorization: accessToken,
           },
         }).catch((err) => void err);
+        
         setLoadingWebsites(false);
         if (!res) {
           return;
@@ -111,7 +112,9 @@ export const GlobalProvider = ({children}) => {
             errorMsg, 
             setErrorMsg,
             submitButtonDisabled,
-            setSubmitButtonDisabled
+            setSubmitButtonDisabled,
+            loadingWebsites, 
+            setLoadingWebsites
         }}>
             {children}
         </GlobalContext.Provider>
