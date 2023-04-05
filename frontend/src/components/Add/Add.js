@@ -6,6 +6,7 @@ const Add = () => {
   return (
     <AddStyled>
         <InnerLayout>
+            <h2>Add Website</h2>
         </InnerLayout>
     </AddStyled>
   )
