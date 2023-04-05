@@ -6,11 +6,21 @@ import { plus } from '../../utils/Icons';
 
 
 function Form() {
-    const {addWebsite, getIncomes, errorMsg, setErrorMsg} = useGlobalContext();
+    const {addWebsite, getIncomes, errorMsg, setErrorMsg, submitButtonDisabled, setSubmitButtonDisabled} = useGlobalContext();
     const [inputUrl, setInputUrl] = useState("");
 
-    const handleSubmit = e => {
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
+
+        if(!inputUrl.trim() && !submitButtonDisabled){
+            setErrorMsg("Url is required");
+            await delay(3000);
+            setErrorMsg("");
+            return;
+        }
+
         addWebsite(inputUrl)
         setInputUrl("");
     }
@@ -30,11 +40,11 @@ function Form() {
             
             <div className="submit-btn">
                 <Button 
-                    name={'Add Website'}
-                    icon={plus}
+                    name={submitButtonDisabled ? "Adding..." : "Add"}
+                    icon={submitButtonDisabled ? '' : plus}
                     bPad={'.8rem 1.6rem'}
                     bRad={'30px'}
-                    bg={'var(--color-accent'}
+                    bg={submitButtonDisabled ? 'var(--color-green)' : 'var(--color-accent'}
                     color={'#fff'}
                 />
             </div>
@@ -75,9 +85,6 @@ const FormStyled = styled.form`
     .submit-btn{
         button{
             box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.06);
-            &:hover{
-                background: var(--color-green) !important;
-            }
         }
     }
 `;

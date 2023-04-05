@@ -109,7 +109,9 @@ export const GlobalProvider = ({children}) => {
             totalWebsite,
             websites,
             errorMsg, 
-            setErrorMsg
+            setErrorMsg,
+            submitButtonDisabled,
+            setSubmitButtonDisabled
         }}>
             {children}
         </GlobalContext.Provider>
