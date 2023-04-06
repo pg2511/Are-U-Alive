@@ -84,7 +84,7 @@ const generateNewAccessToken = async (req, res) => {
 const userSchema = require("./UserSchema");
 
 const verifyEmail = (email) => {
-    const pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
     return pattern.test(email);
 };

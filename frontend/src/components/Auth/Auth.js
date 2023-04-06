@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import "./Auth.module.css";
+import { MainLayout } from "../../styles/Layouts";
+import styled from "styled-components";
+import bg from '../../img/bg.png'
+import { useGlobalContext } from '../../context/globalContext';
 
 function Auth() {
   const [signupActive, setSignupActive] = useState(false);
@@ -10,16 +13,15 @@ function Auth() {
   });
 
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
+  const {errorMsg, setErrorMsg} = useGlobalContext();
 
   const validateEmail = (email) => {
     return String(email)
       .toLowerCase()
       .match(
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/
       );
   };
-
 
   // Signup validation
   const handleSignup = async () => {
@@ -72,7 +74,6 @@ function Auth() {
     window.location.reload();
   };
 
-
   // Login validation
   const handleLogin = async () => {
     if (submitButtonDisabled) return;
@@ -115,7 +116,7 @@ function Auth() {
       setErrorMsg(data.message);
       return;
     }
-    
+
     const tokens = data.data.tokens;
 
     localStorage.setItem("tokens", JSON.stringify(tokens));
@@ -165,13 +166,16 @@ function Auth() {
         />
       </div>
 
-      {errorMsg && <p className="error">{errorMsg}</p>}
+      {errorMsg && <p className='error'>{errorMsg}</p>}
 
-      
-      <button onClick={handleSignup} disabled={submitButtonDisabled}> {submitButtonDisabled ? "Signing up..." : "Signup"}</button>
+      <button onClick={handleSignup} disabled={submitButtonDisabled}>
+        {" "}
+        {submitButtonDisabled ? "Signing up..." : "Signup"}
+      </button>
 
       <p className="bottom-text">
-        Already a user ? <span onClick={() => setSignupActive(false)}>Login here</span>
+        Already a user ?{" "}
+        <span onClick={() => setSignupActive(false)}>Login here</span>
       </p>
     </div>
   );
@@ -208,12 +212,121 @@ function Auth() {
       </button>
 
       <p className="bottom-text">
-        New user ? <span  onClick={() => setSignupActive(true)}>Sign up here</span>
+        New user ?{" "}
+        <span onClick={() => setSignupActive(true)}>Sign up here</span>
       </p>
     </div>
   );
 
-  return <div className="container">{signupActive ? signupDiv : loginDiv}</div>;
+  return (
+    <AuthStyled bg={bg} className="app">
+      <MainLayout>
+        <main>
+          {signupActive ? signupDiv : loginDiv}
+        </main>
+      </MainLayout>
+    </AuthStyled>
+  );
 }
 
+const AuthStyled = styled.div`
+
+    height: 100vh;
+    width: fit-content;
+    background-image: url(${props => props.bg});
+    position: relative;
+    main{
+      background: rgba(252, 246, 249, 0.78);
+      border: 3px solid #FFFFFF;
+      backdrop-filter: blur(4.5px);
+      border-radius: 32px;
+      overflow-x: hidden;
+      margin: auto;
+      margin-left:30rem;
+      &::-webkit-scrollbar{
+        width: 0;
+      }
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 25px;
+    }
+
+  .box {
+    width: 400px;
+    max-width: 100%;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+    margin: auto auto;
+  }
+  
+  .elem {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .elem label {
+    font-size: 16px;
+    font-size: 500;
+    line-height: 22px;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 8px 16px;
+    outline: none;
+    border: none;
+    background-color: white;
+    font-size: 16px;
+    line-height: 18px;
+    border: 1px solid gray;
+    transition: 200ms;
+    border-radius: 5px;
+  }
+  
+  .input::placeholder {
+    color: #00000088;
+  }
+  
+  .input:focus {
+    border: 1px solid #6f17ea;
+  }
+  
+  .heading {
+    font-size: 25px;
+    font-weight: bold;
+    line-height: 32px;
+  }
+  
+  .bottom-text {
+    text-align: center;
+    font-size: 14px;
+    line-height: 18px;
+  }
+  
+  .bottom-text span {
+    font-weight: bold;
+    color: #6f17ea;
+    cursor: pointer;
+  }
+  
+  .box button {
+    padding: 12px 24px;
+    width: 100%;
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background-color: #6f17ea;
+    color: white;
+    border-radius: 5px;
+  }
+`
 export default Auth;
