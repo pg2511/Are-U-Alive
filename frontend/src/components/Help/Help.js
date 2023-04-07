@@ -16,9 +16,9 @@ const Help = () => {
   
   const HelpStyled = styled.div`
       .helpimg {
-        margin: auto 350px;
-        height: 33.5rem;
-        width: 25rem;
+        margin: auto 250px;
+        height: 32rem;
+        width: 40rem;
       }
   `
 
