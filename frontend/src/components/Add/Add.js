@@ -16,7 +16,7 @@ const Add = () => {
     <AddStyled>
         <InnerLayout>
             <h2>Add Website</h2>
-             <h2 className="total-websites">Total Websites: <span>{totalWebsite()}</span></h2>
+            <h2 className="total-websites">Total Websites: <span>{totalWebsite()}</span></h2>
              
              <div className="website-content">
                 <div className="form-container">
@@ -35,7 +35,6 @@ const Add = () => {
                     })}
                 </div>
               </div>
-
         </InnerLayout>
     </AddStyled>
   )

@@ -5,10 +5,23 @@ import down from "../../assets/down.png";
 import Button from "../Button/Button";
 import { trash } from "../../utils/Icons";
 
-function WebsiteItem({ id, title, url, isActive }) {
+function WebsiteItem({ id, title, url, isActive, isDelete, deleteItem, deletingWebsite }) {
   return (
-    <WebsiteItemStyled isActive={isActive}>
-      {isActive ? (
+    <WebsiteItemStyled isActive={isActive} isDelete={isDelete}>
+      
+      {isDelete ? (
+        <Button
+              name={deletingWebsite===id ? "Deleting..." : ""}
+              icon={deletingWebsite===id ? "" : trash}
+              bPad={"0.45rem"}
+              bRad={"50%"}
+              bg={'var(--primary-color'}
+              color={"#fff"}
+              iColor={"#fff"}
+              hColor={"var(--color-green)"}
+              onClick={() => deleteItem(id)}
+            />
+      ) : isActive ? (
         <img src={active} className="icon" />
       ) : (
         <img src={down} className="icon" />
@@ -16,7 +29,7 @@ function WebsiteItem({ id, title, url, isActive }) {
 
       <div className="content">
         <h5>{url}</h5>
-          {/* <div className="btn-con">
+        {/* <div className="btn-con">
             <Button
               icon={trash}
               bPad={"1rem"}
@@ -28,7 +41,6 @@ function WebsiteItem({ id, title, url, isActive }) {
               // onClick={() => deleteItem(id)}
             />
           </div> */}
-        
       </div>
     </WebsiteItemStyled>
   );
@@ -81,10 +93,9 @@ const WebsiteItemStyled = styled.div`
         background: ${(props) => props.indicator};
       }
     }
-    
+
     .btn-con {
-        margin-left: auto;
-    
+      margin-left: auto;
     }
   }
 `;
