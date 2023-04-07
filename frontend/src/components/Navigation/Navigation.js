@@ -3,9 +3,15 @@ import styled from 'styled-components'
 import avatar from '../../img/avatar2.png'
 import { signout } from '../../utils/Icons'
 import { menuItems } from '../../utils/menuItems'
+import Button from '../Button/Button'
 
 function Navigation({active, setActive}) {
     
+    const handleSignout = () => {
+        localStorage.removeItem("tokens");
+        window.location.reload();
+    }
+
     return (
         <NavStyled>
             <div className="user-con">
@@ -28,9 +34,15 @@ function Navigation({active, setActive}) {
                 })}
             </ul>
             <div className="bottom-nav">
-                <li>
-                    {signout} Sign Out
-                </li>
+                <Button 
+                    name="SignOut"
+                    icon={signout}
+                    bPad={'.8rem 1.6rem'}
+                    bRad={'30px'}
+                    bg={'var(--color-grey)'}
+                    color={'#fff'}
+                    onClick={handleSignout}
+                />
             </div>
         </NavStyled>
     )
@@ -109,6 +121,10 @@ const NavStyled = styled.nav`
             background: #222260;
             border-radius: 0 10px 10px 0;
         }
+    }
+
+    .btn {
+
     }
 `;
 

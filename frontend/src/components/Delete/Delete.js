@@ -6,7 +6,7 @@ import Form from '../Form/Form';
 import WebsiteItem from '../WebsiteItem/WebsiteItem';
 
 const Delete = () => {
-  const {websites, fetchAllWebsites, totalWebsite, deleteWebsite, deletingWebsite, setDeletingWebsite} = useGlobalContext()
+  const {websites, fetchAllWebsites, totalWebsite, deleteWebsite} = useGlobalContext()
   useEffect(() =>{
     fetchAllWebsites()
   }, [])
@@ -29,7 +29,6 @@ const Delete = () => {
                             isActive={isActive}
                             deleteItem={deleteWebsite}
                             isDelete="true"
-                            deletingWebsite={deletingWebsite}
                         />
                     })}
                 </div>

@@ -5,14 +5,13 @@ import down from "../../assets/down.png";
 import Button from "../Button/Button";
 import { trash } from "../../utils/Icons";
 
-function WebsiteItem({ id, title, url, isActive, isDelete, deleteItem, deletingWebsite }) {
+function WebsiteItem({ id, title, url, isActive, isDelete, deleteItem }) {
   return (
     <WebsiteItemStyled isActive={isActive} isDelete={isDelete}>
       
       {isDelete ? (
         <Button
-              name={deletingWebsite===id ? "Deleting..." : ""}
-              icon={deletingWebsite===id ? "" : trash}
+              icon={trash}
               bPad={"0.45rem"}
               bRad={"50%"}
               bg={'var(--primary-color'}

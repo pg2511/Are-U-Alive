@@ -23,7 +23,7 @@ const Add = () => {
                     <Form />
                 </div>
                 
-                <div className="incomes">
+                {/* <div className="incomes">
                     {websites.map((website) => {
                         const {_id, url, isActive} = website;
                         return <WebsiteItem
@@ -33,7 +33,7 @@ const Add = () => {
                             isActive={isActive}
                         />
                     })}
-                </div>
+                </div> */}
               </div>
         </InnerLayout>
     </AddStyled>
@@ -41,7 +41,7 @@ const Add = () => {
 }
 
 const AddStyled = styled.div`
-  display: flex;
+    display: flex;
     overflow: auto;
     .total-websites{
         display: flex;
@@ -62,11 +62,7 @@ const AddStyled = styled.div`
         }
     }
     .website-content{
-        display: flex;
-        gap: 2rem;
-        .incomes{
-            flex: 1;
-        }
+        margin-top: 40px;
     }
 `
 
