@@ -7,6 +7,7 @@ const GlobalContext = React.createContext()
 
 export const GlobalProvider = ({children}) => {
 
+    const [singupActive, setSingupActive] = useState(false);
     const [websites, setWebsites] = useState([]);
     const [loadingWebsites, setLoadingWebsites] = useState(true);
     const [inputUrl, setInputUrl] = useState("");
@@ -114,7 +115,9 @@ export const GlobalProvider = ({children}) => {
             submitButtonDisabled,
             setSubmitButtonDisabled,
             loadingWebsites, 
-            setLoadingWebsites
+            setLoadingWebsites,
+            singupActive,
+            setSingupActive
         }}>
             {children}
         </GlobalContext.Provider>
