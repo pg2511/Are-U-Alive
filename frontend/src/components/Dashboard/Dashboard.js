@@ -27,7 +27,7 @@ const Dashboard = () => {
               <p>LOADING...</p>
             ) : (
               <div>
-                {websites.length ? (
+                {websites && websites.length ? (
                   websites.map((website) => {
                     const { _id, url, isActive } = website;
                     return (
