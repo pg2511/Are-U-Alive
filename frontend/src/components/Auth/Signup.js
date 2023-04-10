@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../context/globalContext";
-import "./Auth.css";
 
 const Signup = () => {
   const { singupActive, setSingupActive } = useGlobalContext();
