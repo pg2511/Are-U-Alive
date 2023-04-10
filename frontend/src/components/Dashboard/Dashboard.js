@@ -14,7 +14,11 @@ const Dashboard = () => {
   } = useGlobalContext();
 
   useEffect(() => {
-    fetchAllWebsites();
+    const interval = setInterval(() => {
+      fetchAllWebsites();
+    }, 60000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
