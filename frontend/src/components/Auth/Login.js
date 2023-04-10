@@ -4,7 +4,6 @@ import { useGlobalContext } from "../../context/globalContext";
 import { InnerLayout } from "../../styles/Layouts";
 import Orb from "../Orb/Orb";
 import bg from "../../img/bg.png";
-import { MainLayout } from "../../styles/Layouts";
 
 const Login = () => {
   const { singupActive, setSingupActive } = useGlobalContext();
