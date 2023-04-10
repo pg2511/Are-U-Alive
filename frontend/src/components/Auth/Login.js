@@ -105,7 +105,7 @@ const Login = () => {
       </button>
 
       <p className="bottom-text">
-        New user? {"  "}
+        New user ? {"  "}
         <span onClick={() => setSingupActive(true)}>Signup here</span>
       </p>
     </div>
