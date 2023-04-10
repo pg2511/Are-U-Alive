@@ -108,6 +108,16 @@ const signupUser = async (req, res) => {
         return;
     }
     
+    const check = await userSchema.findOne({ email });
+
+    if(check) {
+        res.status(422).json({
+            status: false,
+            message: `Email is already present`,
+        });
+        return;
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     
     const aTokenExp = Date.now() / 1000 + 24 * 60 * 60;
