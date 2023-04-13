@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import active from "../../assets/active.png";
 import down from "../../assets/down.png";
@@ -6,20 +6,28 @@ import Button from "../Button/Button";
 import { trash } from "../../utils/Icons";
 
 function WebsiteItem({ id, title, url, isActive, isDelete, deleteItem }) {
+
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  const handleDelete = () => {
+    deleteItem(id);
+    setIsDeleted(true);
+  }
+
   return (
     <WebsiteItemStyled isActive={isActive} isDelete={isDelete}>
       
       {isDelete ? (
         <Button
-              icon={trash}
-              bPad={"0.45rem"}
-              bRad={"50%"}
-              bg={'var(--primary-color'}
-              color={"#fff"}
-              iColor={"#fff"}
-              hColor={"var(--color-green)"}
-              onClick={() => deleteItem(id)}
-            />
+          icon={isDeleted ? "" : trash}
+          name={isDeleted ? "Deleting" : ""}
+          bRad={"10%"}
+          bg={'var(--primary-color2'}
+          color={"#ff0000"}
+          iColor={"#fff"}
+          hColor={"var(--color-green)"}
+          onClick={() => handleDelete()}
+        />
       ) : isActive ? (
         <img src={active} className="icon" />
       ) : (
