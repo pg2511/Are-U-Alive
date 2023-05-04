@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useGlobalContext } from "../../context/globalContext";
 import { InnerLayout } from "../../styles/Layouts";
@@ -13,13 +13,19 @@ const Dashboard = () => {
     setLoadingWebsites,
   } = useGlobalContext();
 
+  const [refreshCount, setRefreshCount] = useState(0);
+  
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetchAllWebsites();
-    }, 60000);
+    const intervalId = setInterval(() => {
+      setRefreshCount((count) => count + 1);
+    }, 1000);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    fetchAllWebsites();
+  }, [refreshCount]);
 
   return (
     <DashboardStyled>
