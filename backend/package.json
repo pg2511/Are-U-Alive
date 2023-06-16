@@ -10,9 +10,6 @@
   "engines": {
     "node": ">=14.20.1"
   },
-  "engines": {
-    "node": ">=14.20.1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PraffulGupta-25811/WebMon.git"
