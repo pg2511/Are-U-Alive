@@ -39,7 +39,7 @@ const isSiteActive = async (url) => {
 };
 
 cron.schedule("0 */1 * * *", async () => {
-  console.log('cron is running');
+  // console.log('cron is running');
     const allWebsites = await WebsiteSchema.find({}).populate({
       path: "userId",
       select: ["name", "email"],
@@ -58,7 +58,7 @@ cron.schedule("0 */1 * * *", async () => {
         }
       ).exec();
         
-      console.log('checking website', website.url);
+      // console.log('checking website', website.url);
 
       // send email to the user
       if (!isActive && website.isActive) {
