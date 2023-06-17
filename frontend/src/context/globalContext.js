@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react"
 
-const BASE_URL = "http://localhost:5000/";
+const BASE_URL = "https://prafful-webmonback.onrender.com/";
 
 
 const GlobalContext = React.createContext()
@@ -60,7 +60,7 @@ export const GlobalProvider = ({children}) => {
         const tokens = JSON.parse(rawToken);
         const accessToken = tokens.accessToken.token;
     
-        const res = await fetch("http://localhost:5000/website", {
+        const res = await fetch(`${BASE_URL}website`, {
           headers: {
             Authorization: accessToken,
           },
@@ -85,7 +85,7 @@ export const GlobalProvider = ({children}) => {
         const accessToken = tokens.accessToken.token;
     
         setDeletingWebsite(id);
-        const res = await fetch(`http://localhost:5000/website/${id}`, {
+        const res = await fetch(`${BASE_URL}website/${id}`, {
           method: "DELETE",
           headers: {
             Authorization: accessToken,

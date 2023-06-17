@@ -5,6 +5,8 @@ import { InnerLayout } from "../../styles/Layouts";
 import Orb from "../Orb/Orb";
 import bg from "../../img/bg.png";
 
+const BASE_URL = "https://prafful-webmonback.onrender.com/";
+
 const Login = () => {
   const { singupActive, setSingupActive } = useGlobalContext();
 
@@ -39,7 +41,7 @@ const Login = () => {
     setErrorMsg("");
 
     setSubmitButtonDisabled(true);
-    const res = await fetch("http://localhost:5000/user/login", {
+    const res = await fetch(`${BASE_URL}user/login`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

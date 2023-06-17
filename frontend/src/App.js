@@ -4,6 +4,8 @@ import Home from './components/Home/Home';
 import Auth from './components/Auth/Auth'
 import bg from './img/bg.png'
 
+const BASE_URL = "https://prafful-webmonback.onrender.com/";
+
 function App() {
 
   const [pageLoaded, setPageLoaded] = useState(false);
@@ -21,7 +23,7 @@ function App() {
     const accessToken = tokens.accessToken;
     const aExpiry = new Date(accessToken.expireAt);
     if (new Date() > aExpiry) {
-      const res = await fetch("http://localhost:5000/user/new-token", {
+      const res = await fetch(`${BASE_URL}user/new-token`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
