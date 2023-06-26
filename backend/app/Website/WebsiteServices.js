@@ -30,13 +30,13 @@ const createWebsite = async (req, res) => {
   const user = req.user;
 
   const response = await axios.get(url).catch((err) => void err);
-  // if (!response || response.status !== 200) {
-  //   res.status(422).json({
-  //     status: false,
-  //     message: "Website with url " + url + " is not active",
-  //   });
-  //   return;
-  // }
+  if (!response || response.status !== 200) {
+    res.status(422).json({
+      status: false,
+      message: "Website with url " + url + " is not active",
+    });
+    return;
+  }
 
   const newWebsite = new WebsiteSchema({
     url,
