@@ -4,7 +4,7 @@ import Home from './components/Home/Home';
 import Auth from './components/Auth/Auth'
 import bg from './img/bg.png'
 
-const BASE_URL = "https://prafful-webmonback.onrender.com/";
+const BASE_URL = "https://prafful-areualive-backend.onrender.com/";
 
 function App() {
 

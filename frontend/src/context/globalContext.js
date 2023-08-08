@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react"
 
-const BASE_URL = "https://prafful-webmonback.onrender.com/";
+const BASE_URL = "https://prafful-areualive-backend.onrender.com/";
 
 
 const GlobalContext = React.createContext()

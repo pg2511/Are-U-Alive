@@ -5,7 +5,7 @@ import { InnerLayout } from "../../styles/Layouts";
 import Orb from "../Orb/Orb";
 import bg from "../../img/bg.png";
 
-const BASE_URL = "https://prafful-webmonback.onrender.com/";
+const BASE_URL = "https://prafful-areualive-backend.onrender.com/";
 
 const Signup = () => {
   const { singupActive, setSingupActive } = useGlobalContext();
